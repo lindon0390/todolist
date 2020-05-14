@@ -41,9 +41,15 @@ const tasks = [
   const listContainer = document.querySelector(
     ".tasks-list-section .list-group"
   );
+  const form = document.forms["addTask"];
+  const inputTitle = form.elements["title"];
+  const inputBody = form.elements["body"];
 
+  // Events
   renderAllTasks(objOfTasks);
+  form.addEventListener("submit", onFormSubmitHandler);
 
+  //Functions
   function renderAllTasks(tasksList) {
     if (!tasksList) {
       console.error("передайте список задач");
@@ -83,5 +89,32 @@ const tasks = [
     li.appendChild(deleteBtn);
     li.appendChild(article);
     return li;
+  }
+
+  function onFormSubmitHandler(e) {
+    e.preventDefault();
+    const titleValue = inputTitle.value;
+    const bodyValue = inputBody.value;
+
+    if (!titleValue || !bodyValue) {
+      alert("введите title и body");
+      return;
+    }
+    const task = createNewTask(titleValue, bodyValue);
+    const listItem = listItemTemplate(task);
+    listContainer.insertAdjacentElement("afterbegin", listItem);
+    form.reset();
+  }
+
+  function createNewTask(title, body) {
+    const newTask = {
+      _id: `task-${Math.random()}`,
+      completed: false,
+      body,
+      title,
+    };
+
+    objOfTasks[newTask._id] = newTask;
+    return { ...newTask };
   }
 })(tasks);
