@@ -47,12 +47,26 @@ let arr = [];
   const inputBody = form.elements["body"];
 
   // Events
+  taskBtns();
   renderAllTasks(objOfTasks);
   form.addEventListener("submit", onFormSubmitHandler);
   listContainer.addEventListener("click", onDeleteHandler);
   listContainer.addEventListener("click", onDoneHandler);
 
   //Functions
+  function taskBtns() {
+    const div = document.querySelector(".tasks-list-section");
+    const btnAllTasks = document.createElement("button");
+    const btnUndoneTasks = document.createElement("button");
+    btnAllTasks.classList.add("btn", "btn-primary", "btn-all-tasks", "active");
+    btnAllTasks.textContent = "All tasks";
+    btnUndoneTasks.classList.add("btn", "btn-undone-tasks", "btn-primary");
+    btnUndoneTasks.textContent = "Undone tasks";
+    console.log(div);
+    div.insertAdjacentElement("afterbegin", btnUndoneTasks);
+    div.insertAdjacentElement("afterbegin", btnAllTasks);
+  }
+
   function emptyArrOfTasks(tasks) {
     const emptyMsg = document.getElementById("visibility");
     let emptyArr = Object.keys(tasks).length;
@@ -85,7 +99,7 @@ let arr = [];
     listContainer.appendChild(fragment);
   }
 
-  function listItemTemplate({ _id, title, body } = {}) {
+  function listItemTemplate({ _id, title, body, completed } = {}) {
     const li = document.createElement("li");
     li.classList.add(
       "list-group-item",
@@ -94,6 +108,7 @@ let arr = [];
       "flex-wrap",
       "mt-2"
     );
+    if (completed) li.classList.add("active");
     li.setAttribute("data-task-id", _id);
 
     const div = document.createElement("div");
