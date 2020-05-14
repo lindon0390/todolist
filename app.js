@@ -49,7 +49,8 @@ let arr = [];
   // Events
   renderAllTasks(objOfTasks);
   form.addEventListener("submit", onFormSubmitHandler);
-  listContainer.addEventListener("click", onDeletehandler);
+  listContainer.addEventListener("click", onDeleteHandler);
+  listContainer.addEventListener("click", onDoneHandler);
 
   //Functions
   function emptyArrOfTasks(tasks) {
@@ -95,6 +96,8 @@ let arr = [];
     );
     li.setAttribute("data-task-id", _id);
 
+    const div = document.createElement("div");
+    div.classList.add("container");
     const span = document.createElement("span");
     span.textContent = title;
     span.style.fontWeight = "bold";
@@ -103,11 +106,17 @@ let arr = [];
     deleteBtn.textContent = "Delete Task";
     deleteBtn.classList.add("btn", "btn-danger", "ml-auto", "delete-btn");
 
+    const doneBtn = document.createElement("button");
+    doneBtn.textContent = "Done Task";
+    doneBtn.classList.add("btn", "btn-success", "mr-auto", "done-btn");
+
     const article = document.createElement("p");
     article.textContent = body;
     article.classList.add("mt-2", "w-100");
 
-    li.appendChild(span);
+    div.appendChild(span);
+    li.appendChild(div);
+    li.appendChild(doneBtn);
     li.appendChild(deleteBtn);
     li.appendChild(article);
     return li;
@@ -156,12 +165,19 @@ let arr = [];
     el.remove();
   }
 
-  function onDeletehandler({ target }) {
+  function onDeleteHandler({ target }) {
     if (target.classList.contains("delete-btn")) {
       const parent = target.closest("[data-task-id]");
       const id = parent.dataset.taskId;
       const confirmed = deleteTask(id);
       deleteTaskFromHtml(confirmed, parent);
+    }
+  }
+
+  function onDoneHandler({ target }) {
+    if (target.classList.contains("done-btn")) {
+      const parent = target.closest("[data-task-id]");
+      parent.classList.add("active");
     }
   }
 })(tasks);
