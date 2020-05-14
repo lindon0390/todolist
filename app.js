@@ -30,6 +30,7 @@ const tasks = [
       "Deserunt laborum id consectetur pariatur veniam occaecat occaecat tempor voluptate pariatur nulla reprehenderit ipsum.",
   },
 ];
+let arr = [];
 
 (function (arrOfTasks) {
   const objOfTasks = arrOfTasks.reduce((acc, task) => {
@@ -51,11 +52,29 @@ const tasks = [
   listContainer.addEventListener("click", onDeletehandler);
 
   //Functions
+  function emptyArrOfTasks(tasks) {
+    const emptyMsg = document.getElementById("visibility");
+    let emptyArr = Object.keys(tasks).length;
+    if (emptyArr) {
+      emptyMsg.style.display = "none";
+      return;
+    }
+    emptyMsg.style.display = "block";
+  }
+
   function renderAllTasks(tasksList) {
     if (!tasksList) {
       console.error("передайте список задач");
       return;
     }
+
+    const listGroup = document.querySelector(".list-group");
+    const emptyMsg = document.createElement("span");
+    emptyMsg.id = "visibility";
+    emptyMsg.textContent = "Массив с задачами пуст";
+    emptyMsg.style.display = "none";
+    listGroup.appendChild(emptyMsg);
+    emptyArrOfTasks(tasksList);
 
     const fragment = document.createDocumentFragment();
     Object.values(tasksList).forEach((task) => {
@@ -118,6 +137,7 @@ const tasks = [
     };
 
     objOfTasks[newTask._id] = newTask;
+    emptyArrOfTasks(objOfTasks);
     return { ...newTask };
   }
 
@@ -127,6 +147,7 @@ const tasks = [
     const isConfirm = confirm(`точно удалить ${title}?`);
     if (!isConfirm) return isConfirm;
     delete objOfTasks[id];
+    emptyArrOfTasks(objOfTasks);
     return isConfirm;
   }
 
